@@ -2,33 +2,23 @@ import { motion } from "framer-motion";
 import { Globe, MapPin } from "lucide-react";
 
 const locations = [
-  { name: "США", flag: "🇺🇸", ping: "12ms" },
-  { name: "Канада", flag: "🇨🇦", ping: "18ms" },
-  { name: "Бразилия", flag: "🇧🇷", ping: "45ms" },
-  { name: "Великобритания", flag: "🇬🇧", ping: "14ms" },
+  { name: "Латвия", flag: "🇱🇻", ping: "14ms" },
   { name: "Германия", flag: "🇩🇪", ping: "11ms" },
-  { name: "Франция", flag: "🇫🇷", ping: "13ms" },
-  { name: "Нидерланды", flag: "🇳🇱", ping: "10ms" },
-  { name: "Швеция", flag: "🇸🇪", ping: "16ms" },
+  { name: "Австрия", flag: "🇦🇹", ping: "13ms" },
+  { name: "Чехия", flag: "🇨🇿", ping: "15ms" },
+  { name: "Дания", flag: "🇩🇰", ping: "16ms" },
   { name: "Финляндия", flag: "🇫🇮", ping: "19ms" },
+  { name: "Хорватия", flag: "🇭🇷", ping: "22ms" },
+  { name: "Норвегия", flag: "🇳🇴", ping: "18ms" },
+  { name: "Нидерланды", flag: "🇳🇱", ping: "10ms" },
+  { name: "Швеция", flag: "🇸🇪", ping: "17ms" },
   { name: "Польша", flag: "🇵🇱", ping: "15ms" },
-  { name: "Румыния", flag: "🇷🇴", ping: "22ms" },
-  { name: "Турция", flag: "🇹🇷", ping: "28ms" },
-  { name: "ОАЭ", flag: "🇦🇪", ping: "35ms" },
-  { name: "Индия", flag: "🇮🇳", ping: "42ms" },
+  { name: "Швейцария", flag: "🇨🇭", ping: "12ms" },
+  { name: "Великобритания", flag: "🇬🇧", ping: "14ms" },
+  { name: "Албания", flag: "🇦🇱", ping: "25ms" },
+  { name: "США", flag: "🇺🇸", ping: "32ms" },
   { name: "Сингапур", flag: "🇸🇬", ping: "38ms" },
-  { name: "Япония", flag: "🇯🇵", ping: "31ms" },
-  { name: "Корея", flag: "🇰🇷", ping: "33ms" },
   { name: "Австралия", flag: "🇦🇺", ping: "55ms" },
-  { name: "ЮАР", flag: "🇿🇦", ping: "62ms" },
-  { name: "Израиль", flag: "🇮🇱", ping: "26ms" },
-  { name: "Казахстан", flag: "🇰🇿", ping: "24ms" },
-  { name: "Италия", flag: "🇮🇹", ping: "17ms" },
-  { name: "Испания", flag: "🇪🇸", ping: "20ms" },
-  { name: "Аргентина", flag: "🇦🇷", ping: "68ms" },
-  { name: "Мексика", flag: "🇲🇽", ping: "40ms" },
-  { name: "Гонконг", flag: "🇭🇰", ping: "36ms" },
-  { name: "Украина", flag: "🇺🇦", ping: "21ms" },
 ];
 
 const containerVariants = {
@@ -136,7 +126,7 @@ const InfraSection = () => {
           className="flex justify-center gap-12 mt-16"
         >
           {[
-            { value: "27+", label: "Локаций" },
+            { value: "17", label: "Локаций" },
             { value: "99.9%", label: "Аптайм" },
             { value: "10 Gbps", label: "Каналы" },
           ].map((stat) => (
