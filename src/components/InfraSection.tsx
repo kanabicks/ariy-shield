@@ -1,169 +1,80 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState, useMemo } from "react";
+import { Globe, MapPin } from "lucide-react";
 
-// Real country locations on a world map (x%, y%)
-const countries = [
-  { name: "🇺🇸 США", x: 18, y: 38 },
-  { name: "🇨🇦 Канада", x: 20, y: 28 },
-  { name: "🇧🇷 Бразилия", x: 32, y: 65 },
-  { name: "🇬🇧 UK", x: 46, y: 30 },
-  { name: "🇩🇪 Германия", x: 50, y: 32 },
-  { name: "🇫🇷 Франция", x: 48, y: 35 },
-  { name: "🇳🇱 Нидерланды", x: 49, y: 30 },
-  { name: "🇸🇪 Швеция", x: 53, y: 24 },
-  { name: "🇫🇮 Финляндия", x: 56, y: 22 },
-  { name: "🇵🇱 Польша", x: 54, y: 33 },
-  { name: "🇷🇴 Румыния", x: 56, y: 37 },
-  { name: "🇹🇷 Турция", x: 58, y: 40 },
-  { name: "🇦🇪 ОАЭ", x: 63, y: 48 },
-  { name: "🇮🇳 Индия", x: 70, y: 50 },
-  { name: "🇸🇬 Сингапур", x: 76, y: 58 },
-  { name: "🇯🇵 Япония", x: 85, y: 38 },
-  { name: "🇰🇷 Корея", x: 83, y: 38 },
-  { name: "🇦🇺 Австралия", x: 83, y: 72 },
-  { name: "🇿🇦 ЮАР", x: 55, y: 72 },
-  { name: "🇮🇱 Израиль", x: 58, y: 43 },
-  { name: "🇰🇿 Казахстан", x: 65, y: 34 },
-  { name: "🇺🇦 Украина", x: 57, y: 34 },
-  { name: "🇮🇹 Италия", x: 51, y: 38 },
-  { name: "🇪🇸 Испания", x: 46, y: 40 },
-  { name: "🇦🇷 Аргентина", x: 28, y: 78 },
-  { name: "🇲🇽 Мексика", x: 15, y: 48 },
-  { name: "🇭🇰 Гонконг", x: 79, y: 47 },
+const locations = [
+  { name: "США", flag: "🇺🇸", ping: "12ms" },
+  { name: "Канада", flag: "🇨🇦", ping: "18ms" },
+  { name: "Бразилия", flag: "🇧🇷", ping: "45ms" },
+  { name: "Великобритания", flag: "🇬🇧", ping: "14ms" },
+  { name: "Германия", flag: "🇩🇪", ping: "11ms" },
+  { name: "Франция", flag: "🇫🇷", ping: "13ms" },
+  { name: "Нидерланды", flag: "🇳🇱", ping: "10ms" },
+  { name: "Швеция", flag: "🇸🇪", ping: "16ms" },
+  { name: "Финляндия", flag: "🇫🇮", ping: "19ms" },
+  { name: "Польша", flag: "🇵🇱", ping: "15ms" },
+  { name: "Румыния", flag: "🇷🇴", ping: "22ms" },
+  { name: "Турция", flag: "🇹🇷", ping: "28ms" },
+  { name: "ОАЭ", flag: "🇦🇪", ping: "35ms" },
+  { name: "Индия", flag: "🇮🇳", ping: "42ms" },
+  { name: "Сингапур", flag: "🇸🇬", ping: "38ms" },
+  { name: "Япония", flag: "🇯🇵", ping: "31ms" },
+  { name: "Корея", flag: "🇰🇷", ping: "33ms" },
+  { name: "Австралия", flag: "🇦🇺", ping: "55ms" },
+  { name: "ЮАР", flag: "🇿🇦", ping: "62ms" },
+  { name: "Израиль", flag: "🇮🇱", ping: "26ms" },
+  { name: "Казахстан", flag: "🇰🇿", ping: "24ms" },
+  { name: "Италия", flag: "🇮🇹", ping: "17ms" },
+  { name: "Испания", flag: "🇪🇸", ping: "20ms" },
+  { name: "Аргентина", flag: "🇦🇷", ping: "68ms" },
+  { name: "Мексика", flag: "🇲🇽", ping: "40ms" },
+  { name: "Гонконг", flag: "🇭🇰", ping: "36ms" },
+  { name: "Украина", flag: "🇺🇦", ping: "21ms" },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.04 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.8, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" as const },
+  },
+};
+
 const InfraSection = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
-  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
-
-  // Connections between nearby countries
-  const connections = useMemo(() => {
-    const lines: [number, number][] = [];
-    for (let i = 0; i < countries.length; i++) {
-      for (let j = i + 1; j < countries.length; j++) {
-        const dx = countries[i].x - countries[j].x;
-        const dy = countries[i].y - countries[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 18) {
-          lines.push([i, j]);
-        }
-      }
-    }
-    return lines;
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let time = 0;
-
-    const draw = () => {
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-      time += 0.005;
-
-      // Draw connections with animated pulse
-      connections.forEach(([i, j], idx) => {
-        const a = countries[i];
-        const b = countries[j];
-        const ax = (a.x / 100) * w;
-        const ay = (a.y / 100) * h;
-        const bx = (b.x / 100) * w;
-        const by = (b.y / 100) * h;
-
-        // Animated data pulse along the line
-        const pulsePos = (time * 0.8 + idx * 0.3) % 1;
-        const px = ax + (bx - ax) * pulsePos;
-        const py = ay + (by - ay) * pulsePos;
-
-        // Line
-        ctx.beginPath();
-        ctx.moveTo(ax, ay);
-        ctx.lineTo(bx, by);
-        ctx.strokeStyle = `rgba(26, 86, 219, 0.15)`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Pulse dot
-        ctx.beginPath();
-        ctx.arc(px, py, 2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(26, 86, 219, 0.7)`;
-        ctx.fill();
-      });
-
-      // Draw nodes
-      countries.forEach((c, i) => {
-        const cx = (c.x / 100) * w;
-        const cy = (c.y / 100) * h;
-        const pulse = Math.sin(time * 2 + i) * 0.3 + 0.7;
-        const isHovered = hoveredNode === i;
-        const radius = isHovered ? 5 : 3;
-
-        // Glow
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius + 6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(26, 86, 219, ${pulse * 0.15})`;
-        ctx.fill();
-
-        // Core
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.fillStyle = isHovered
-          ? `rgba(60, 130, 255, 1)`
-          : `rgba(26, 86, 219, ${pulse})`;
-        ctx.fill();
-      });
-
-      animRef.current = requestAnimationFrame(draw);
-    };
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * 2;
-      canvas.height = rect.height * 2;
-      ctx.scale(2, 2);
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      window.removeEventListener("resize", resize);
-    };
-  }, [connections, hoveredNode]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mx = ((e.clientX - rect.left) / rect.width) * 100;
-    const my = ((e.clientY - rect.top) / rect.height) * 100;
-
-    let closest = -1;
-    let minDist = Infinity;
-    countries.forEach((c, i) => {
-      const d = Math.sqrt((c.x - mx) ** 2 + (c.y - my) ** 2);
-      if (d < 4 && d < minDist) {
-        minDist = d;
-        closest = i;
-      }
-    });
-    setHoveredNode(closest >= 0 ? closest : null);
-  };
-
   return (
     <section className="relative py-32 overflow-hidden">
+      {/* Ambient glow */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20 animate-pulse-glow pointer-events-none"
+        style={{
+          background: "radial-gradient(circle, hsl(221 78% 48% / 0.3), transparent 70%)",
+        }}
+      />
+
       <div className="container mx-auto px-6">
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="text-center mb-4"
+        >
+          <Globe className="inline-block h-10 w-10 text-primary mb-4" />
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="text-3xl md:text-5xl font-bold text-center mb-6 text-foreground"
         >
           Серверы <span className="gradient-text">по всему миру</span>
@@ -180,37 +91,59 @@ const InfraSection = () => {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="relative w-full max-w-5xl mx-auto aspect-[2/1] glass rounded-3xl overflow-hidden"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={() => setHoveredNode(null)}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto"
         >
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 w-full h-full"
-          />
-
-          {/* Country labels */}
-          {countries.map((c, i) => (
+          {locations.map((loc) => (
             <motion.div
-              key={i}
-              className="absolute pointer-events-none"
-              style={{
-                left: `${c.x}%`,
-                top: `${c.y}%`,
-                transform: "translate(-50%, -180%)",
+              key={loc.name}
+              variants={itemVariants}
+              whileHover={{
+                scale: 1.08,
+                boxShadow: "0 0 30px hsl(221 78% 48% / 0.4)",
+                borderColor: "hsl(221, 78%, 48%)",
               }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: hoveredNode === i ? 1 : 0 }}
-              transition={{ duration: 0.2 }}
+              className="glass rounded-xl px-4 py-3 flex items-center gap-3 cursor-default transition-colors duration-300 group"
             >
-              <span className="text-xs font-semibold text-primary-foreground glass px-2 py-1 rounded-md whitespace-nowrap">
-                {c.name}
-              </span>
+              <span className="text-xl">{loc.flag}</span>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-foreground leading-tight">
+                  {loc.name}
+                </span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <MapPin className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {loc.ping}
+                </span>
+              </div>
+              {/* Live indicator */}
+              <div className="relative ml-1">
+                <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                <div className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-50" />
+              </div>
             </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="flex justify-center gap-12 mt-16"
+        >
+          {[
+            { value: "27+", label: "Локаций" },
+            { value: "99.9%", label: "Аптайм" },
+            { value: "10 Gbps", label: "Каналы" },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-2xl md:text-3xl font-bold gradient-text">{stat.value}</div>
+              <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+            </div>
           ))}
         </motion.div>
       </div>
