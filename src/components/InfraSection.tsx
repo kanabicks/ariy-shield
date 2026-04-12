@@ -126,7 +126,7 @@ const InfraSection = () => {
           className="flex justify-center gap-12 mt-16"
         >
           {[
-            { value: "27+", label: "Локаций" },
+            { value: "17", label: "Локаций" },
             { value: "99.9%", label: "Аптайм" },
             { value: "10 Gbps", label: "Каналы" },
           ].map((stat) => (
