@@ -301,8 +301,8 @@ const InteractiveCube = () => {
       {/* Canvas scene */}
       <canvas
         ref={canvasRef}
-        className="w-[600px] h-[600px] max-w-full"
-        style={{ width: 600, height: 600 }}
+        className="w-full h-full sm:w-[600px] sm:h-[600px]"
+        style={{ maxWidth: "100vw", maxHeight: "100vh" }}
       />
     </div>
   );
