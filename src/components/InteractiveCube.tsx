@@ -118,7 +118,7 @@ const InteractiveCube = () => {
       const h = rect.height;
       const cx = w / 2;
       const cy = h / 2;
-      const dynamicScale = Math.min(w, h) * 0.25;
+      scaleRef.current = Math.min(w, h) * 0.25;
 
       ctx.clearRect(0, 0, w, h);
 
