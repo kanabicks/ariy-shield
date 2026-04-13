@@ -17,7 +17,7 @@ const Navbar = () => {
           </span>
         </div>
         <a
-          href="https://cabinet.ariyvpn.com"
+          href="https://cabinet.ariybot.com"
           className="gradient-primary rounded-lg px-5 py-2.5 text-sm font-semibold text-primary-foreground glow-box transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_hsl(221_78%_48%_/_0.5)]"
         >
           Личный кабинет

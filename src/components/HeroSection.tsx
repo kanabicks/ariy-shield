@@ -40,7 +40,7 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.a
-          href="https://cabinet.ariyvpn.com"
+          href="https://cabinet.ariybot.com"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}

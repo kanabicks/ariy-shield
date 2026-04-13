@@ -12,7 +12,7 @@ const Footer = () => {
           © {new Date().getFullYear()} Ariy VPN. Все права защищены.
         </p>
         <a
-          href="https://cabinet.ariyvpn.com"
+          href="https://cabinet.ariybot.com"
           className="text-xs text-muted-foreground hover:text-primary transition-colors"
         >
           Личный кабинет

@@ -2,23 +2,23 @@ import { motion } from "framer-motion";
 import { Globe, MapPin } from "lucide-react";
 
 const locations = [
-  { name: "Латвия", flag: "🇱🇻", ping: "14ms" },
-  { name: "Германия", flag: "🇩🇪", ping: "11ms" },
-  { name: "Австрия", flag: "🇦🇹", ping: "13ms" },
-  { name: "Чехия", flag: "🇨🇿", ping: "15ms" },
-  { name: "Дания", flag: "🇩🇰", ping: "16ms" },
-  { name: "Финляндия", flag: "🇫🇮", ping: "19ms" },
-  { name: "Хорватия", flag: "🇭🇷", ping: "22ms" },
-  { name: "Норвегия", flag: "🇳🇴", ping: "18ms" },
-  { name: "Нидерланды", flag: "🇳🇱", ping: "10ms" },
-  { name: "Швеция", flag: "🇸🇪", ping: "17ms" },
-  { name: "Польша", flag: "🇵🇱", ping: "15ms" },
-  { name: "Швейцария", flag: "🇨🇭", ping: "12ms" },
-  { name: "Великобритания", flag: "🇬🇧", ping: "14ms" },
-  { name: "Албания", flag: "🇦🇱", ping: "25ms" },
-  { name: "США", flag: "🇺🇸", ping: "32ms" },
-  { name: "Сингапур", flag: "🇸🇬", ping: "38ms" },
-  { name: "Австралия", flag: "🇦🇺", ping: "55ms" },
+  { name: "Латвия", code: "lv", ping: "14ms" },
+  { name: "Германия", code: "de", ping: "11ms" },
+  { name: "Австрия", code: "at", ping: "13ms" },
+  { name: "Чехия", code: "cz", ping: "15ms" },
+  { name: "Дания", code: "dk", ping: "16ms" },
+  { name: "Финляндия", code: "fi", ping: "19ms" },
+  { name: "Хорватия", code: "hr", ping: "22ms" },
+  { name: "Норвегия", code: "no", ping: "18ms" },
+  { name: "Нидерланды", code: "nl", ping: "10ms" },
+  { name: "Швеция", code: "se", ping: "17ms" },
+  { name: "Польша", code: "pl", ping: "15ms" },
+  { name: "Швейцария", code: "ch", ping: "12ms" },
+  { name: "Великобритания", code: "gb", ping: "14ms" },
+  { name: "Албания", code: "al", ping: "25ms" },
+  { name: "США", code: "us", ping: "32ms" },
+  { name: "Сингапур", code: "sg", ping: "38ms" },
+  { name: "Австралия", code: "au", ping: "55ms" },
 ];
 
 const containerVariants = {
@@ -41,7 +41,6 @@ const itemVariants = {
 const InfraSection = () => {
   return (
     <section className="relative py-32 overflow-hidden">
-      {/* Ambient glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20 animate-pulse-glow pointer-events-none"
         style={{
@@ -98,7 +97,15 @@ const InfraSection = () => {
               }}
               className="glass rounded-xl px-4 py-3 flex items-center gap-3 cursor-default transition-colors duration-300 group"
             >
-              <span className="text-xl">{loc.flag}</span>
+              <img
+                src={`https://flagcdn.com/32x24/${loc.code}.png`}
+                srcSet={`https://flagcdn.com/64x48/${loc.code}.png 2x`}
+                alt={loc.name}
+                width="32"
+                height="24"
+                className="rounded-sm"
+                loading="lazy"
+              />
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-foreground leading-tight">
                   {loc.name}
@@ -108,7 +115,6 @@ const InfraSection = () => {
                   {loc.ping}
                 </span>
               </div>
-              {/* Live indicator */}
               <div className="relative ml-1">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <div className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-50" />
@@ -117,7 +123,6 @@ const InfraSection = () => {
           ))}
         </motion.div>
 
-        {/* Stats row */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
