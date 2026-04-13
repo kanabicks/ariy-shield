@@ -52,8 +52,11 @@ const InteractiveCube = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const scaleRef = useRef(150);
+
   const project = useCallback(
-    (x: number, y: number, z: number, rotX: number, rotY: number, cx: number, cy: number, scale = 150) => {
+    (x: number, y: number, z: number, rotX: number, rotY: number, cx: number, cy: number) => {
+      const scale = scaleRef.current;
       const radX = (rotX * Math.PI) / 180;
       const radY = (rotY * Math.PI) / 180;
 
