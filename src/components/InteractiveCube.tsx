@@ -52,8 +52,11 @@ const InteractiveCube = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const scaleRef = useRef(150);
+
   const project = useCallback(
-    (x: number, y: number, z: number, rotX: number, rotY: number, cx: number, cy: number, scale = 150) => {
+    (x: number, y: number, z: number, rotX: number, rotY: number, cx: number, cy: number) => {
+      const scale = scaleRef.current;
       const radX = (rotX * Math.PI) / 180;
       const radY = (rotY * Math.PI) / 180;
 
@@ -115,6 +118,7 @@ const InteractiveCube = () => {
       const h = rect.height;
       const cx = w / 2;
       const cy = h / 2;
+      scaleRef.current = Math.min(w, h) * 0.25;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -301,8 +305,8 @@ const InteractiveCube = () => {
       {/* Canvas scene */}
       <canvas
         ref={canvasRef}
-        className="w-[600px] h-[600px] max-w-full"
-        style={{ width: 600, height: 600 }}
+        className="w-full h-full sm:w-[600px] sm:h-[600px]"
+        style={{ maxWidth: "100vw", maxHeight: "100vh" }}
       />
     </div>
   );
